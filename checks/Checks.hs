@@ -32,6 +32,10 @@ checks = testGroup ""
     , testProperty "continuous > id"
       \ (Positive interest) (Positive time) (Positive wealth)
       → continuous interest time wealth ≥ wealth
+    , testProperty "continuous = continuous with linear income 0"
+      $ continuous ↔ \ interest time → continuousWithLinearIncome interest time 0
+    , testProperty "continuous 0 with linear income = id"
+      \ wealth → continuousWithLinearIncome 0 1 ((1 ∷ Rate) × wealth) 0 ↔ wealth
     ]
   , testGroup "cases"
     [ testCase "discrete" do assertEqual "" 2593.7427 (discrete 0.1 10 1000)
