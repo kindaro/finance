@@ -28,7 +28,7 @@ common commons
 
 library
   import: commons
-  exposed-modules: Finance
+  exposed-modules: Finance, ℤ, TypeFunctions, TypedArithmetic
 
 test-suite checks
   import: commons

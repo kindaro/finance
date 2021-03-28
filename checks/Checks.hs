@@ -11,6 +11,9 @@ import Data.Tagged
 import Data.Proxy
 
 import Finance
+import qualified ℤ
+import ℤ (ℤ (..))
+import TypedArithmetic
 
 main ∷ IO ( )
 main = defaultMain checks
@@ -33,7 +36,7 @@ checks = testGroup ""
   , testGroup "cases"
     [ testCase "discrete" do assertEqual "" 2593.7427 (discrete 0.1 10 1000)
     , testCase "continuous" do assertEqual "" 2718.2817 (continuous 0.1 10 1000)
-    , testCase "ℤ normalization" do assertEqual "" (Proxy @(ℤAdd (S(S Z)) (P(P Z)))) (Proxy @Z)
+    , testCase "ℤ normalization" do assertEqual "" (Proxy @(ℤ.Add (S(S Z)) (P(P Z)))) (Proxy @Z)
     ]
   ]
 
