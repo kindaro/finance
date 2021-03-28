@@ -10,20 +10,33 @@ data ℤ = P ℤ | Z | S ℤ
 -- | Since there are many ways to build a given number, we should like to be
 -- able to find the canonical way of building.
 --
--- Unfortunately, it does not always work. Counterexample:
---
--- λ :kind! ℤNormalize (S (S (P (P Z))))
--- ℤNormalize (S (S (P (P Z)))) :: ℤ
--- = 'S ('P 'Z)
---
--- In such cases, hammer it several times.
-
+-- It is not entirely trivial. We must repeat normalization passes until we are
+-- sure that all irregularities are smoothed out. But we also must stop some
+-- time and not enter an endless cycle.
 type family ℤNormalize (x ∷ ℤ) where
   ℤNormalize (P (S x)) = ℤNormalize x
   ℤNormalize (S (P x)) = ℤNormalize x
-  ℤNormalize (P x) = P (ℤNormalize x)
-  ℤNormalize (S x) = S (ℤNormalize x)
+  ℤNormalize (P x) = ℤNormalize' (IsNormal (P (ℤNormalize x))) (P (ℤNormalize x))
+  ℤNormalize (S x) = ℤNormalize' (IsNormal (S (ℤNormalize x))) (S (ℤNormalize x))
   ℤNormalize x = x
+
+type family ℤNormalize' (isNormal ∷ Bool) (x ∷ ℤ) ∷ ℤ where
+  ℤNormalize' False x = ℤNormalize x
+  ℤNormalize' True x = x
+
+data Direction = Descending | Ascending
+
+type family IsNormal (x ∷ ℤ) ∷ Bool where
+  IsNormal (P x) = IsMonotone Descending x
+  IsNormal Z = True
+  IsNormal (S x) = IsMonotone Ascending x
+
+type family IsMonotone (direction ∷ Direction) (x ∷ ℤ) ∷ Bool where
+  IsMonotone _ Z = True
+  IsMonotone Ascending (S x) = IsMonotone Ascending x
+  IsMonotone Ascending (P x) = False
+  IsMonotone Descending (S x) = False
+  IsMonotone Descending (P x) = IsMonotone Descending x
 
 -- | The obvious additive inverse. We should like to have
 -- `ℤNormalize ∘ ℤInvert = ℤInvert ∘ ℤNormalize`.
