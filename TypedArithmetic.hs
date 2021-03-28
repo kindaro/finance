@@ -19,6 +19,12 @@ type Time = Tagged DimensionTime Float
 type DiscreteTime = Tagged DimensionTime Int
 type Rate = Tagged (Invert DimensionTime) Float
 
+type family x × y where
+  Tagged d₁ α × Tagged d₂ α = Tagged (Add d₁ d₂) α
+
+type family x ÷ y where
+  Tagged d₁ α ÷ Tagged d₂ α = Tagged (Add d₁ (Invert d₂)) α
+
 infixl 7 ×
 (×) ∷ Prelude.Num α ⇒ Tagged x α → Tagged y α → Tagged (Add x y) α
 Tagged x × Tagged y = Tagged (x Prelude.* y)
