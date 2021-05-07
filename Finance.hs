@@ -20,4 +20,6 @@ continuous r t x = (e°(r × t)) × x
   -- | Continuous interest compounding with an additional steady income.
 -- Δ$ = r$Δt + αΔt.
 continuousWithLinearIncome ∷ Rate → Time → (Money ÷ Time) → Money → Money
-continuousWithLinearIncome r t α x = x × e°(r × t)  +  (1 ∷ Time) × ((if α ≡ 0 ∧ (r × t) ≤ 0 then 0 else α°(r × t) ) +  α)
+continuousWithLinearIncome r t α x = case r of
+  0 → x  +  α × t
+  r' → e°(r' × t) × x  +  α ÷ r'
