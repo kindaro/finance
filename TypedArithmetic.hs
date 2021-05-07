@@ -36,3 +36,6 @@ Tagged x ÷ Tagged y = Tagged (x Prelude./ y)
 infixr 8 °
 (°) ∷ Prelude.Floating α ⇒ Tagged x α → Tagged DimensionNone α → Tagged x α
 Tagged x ° Tagged y = Tagged (x ** y)
+
+reciprocal ∷ Tagged dimensions Float → Tagged (Add DimensionNone (Invert dimensions)) Float
+reciprocal x = (1 ∷ Dimensionless) ÷ x

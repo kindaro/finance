@@ -17,9 +17,18 @@ discrete interest = fix \ f t x → if t ≤ 0 then x else f (t - 1) (x × (inte
 continuous ∷ Rate → Time → Money → Money
 continuous r t x = (e°(r × t)) × x
 
-  -- | Continuous interest compounding with an additional steady income.
+-- | Continuous interest compounding with an additional steady income.
 -- Δ$ = r$Δt + αΔt.
 continuousWithLinearIncome ∷ Rate → Time → (Money ÷ Time) → Money → Money
 continuousWithLinearIncome r t α x = case r of
   0 → x  +  α × t
   r' → e°(r' × t) × x  +  α ÷ r'
+
+samplingRate ∷ Rate
+samplingRate = 1
+
+discountedPriceToSpotRate ∷ Time → Money → Rate
+discountedPriceToSpotRate maturity price = (reciprocal price × (1 ∷ Money ÷ Time)) ° (reciprocal maturity × (1 ∷ Time))  -  1
+
+spotRateToDiscountedPrice ∷ Time → Rate → Money
+spotRateToDiscountedPrice maturity rate = reciprocal ((1  +  rate)°(maturity × samplingRate)) × (1 ∷ Money ÷ Time)

@@ -3,7 +3,7 @@
 module Main where
 
 import Prelude
-import Prelude.Unicode ((≡), (≤), (≥))
+import Prelude.Unicode ((≡), (≤), (≥), (∘))
 import Test.Tasty
 import Test.Tasty.QuickCheck
 import Test.Tasty.HUnit
@@ -36,6 +36,16 @@ checks = testGroup ""
       $ continuous ↔ \ interest time → continuousWithLinearIncome interest time 0
     , testProperty "continuous 0 with linear income = id"
       \ wealth → continuousWithLinearIncome 0 1 ((1 ∷ Rate) × wealth) 0 ↔ wealth
+    , testGroup "rates and discounts"
+      [ testProperty "rate to price and back"
+        \ maturity (NonNegative rate') →
+          let rate = (rate' - fromIntegral (truncate rate')) / 10
+          in rate ~~~ (discountedPriceToSpotRate maturity ∘ spotRateToDiscountedPrice maturity) rate
+      , testProperty "price to rate and back"
+        \ (Positive maturity) (Positive price') →
+          let price = (price' - fromIntegral (truncate price'))
+          in price ~~~ (spotRateToDiscountedPrice maturity ∘ discountedPriceToSpotRate maturity) price
+      ]
     ]
   , testGroup "cases"
     [ testCase "discrete" do assertEqual "" 2593.7427 (discrete 0.1 10 1000)
@@ -43,6 +53,8 @@ checks = testGroup ""
     , testCase "ℤ normalization" do assertEqual "" (Proxy @(ℤ.Add (S(S Z)) (P(P Z)))) (Proxy @Z)
     ]
   ]
+
+x ~~~ y = counterexample (show (x, y)) (abs (x - y) < 0.00001)
 
 class ExtensionalEquality α where
   isExtensionallyEqual ∷ α → α → Property
