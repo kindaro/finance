@@ -24,6 +24,7 @@ common commons
     , EmptyDataDecls
     , PostfixOperators
     , UnsaturatedTypeFamilies
+    , ImportQualifiedPost
   ghc-options: -Wpartial-type-signatures -fdefer-typed-holes -Wall -Wno-star-is-type -Wno-unticked-promoted-constructors
 
 library
