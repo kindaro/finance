@@ -1,0 +1,7 @@
+cradle:
+  cabal:
+    - path: "././"
+      component: "lib:finance"
+
+    - path: "./checks"
+      component: "finance:test:checks"
