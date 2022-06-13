@@ -1,6 +1,8 @@
 module TypedArithmetic where
 
+import Prelude.Unicode ((∘))
 import Data.Tagged
+import Text.Printf
 
 import qualified ℤ
 import ℤ (ℤ (..))
@@ -39,3 +41,9 @@ Tagged x ° Tagged y = Tagged (x ** y)
 
 reciprocal ∷ Tagged dimensions Float → Tagged (Add DimensionNone (Invert dimensions)) Float
 reciprocal x = (1 ∷ Dimensionless) ÷ x
+
+perCent ∷ Tagged (anything ∷ [ℤ]) Float → String
+perCent = (printf "%.2f%%" ∘ unTagged ∘ (× 100))
+
+instance {-# overlapping #-} Show Time where show = printf "%.2f years" ∘ unTagged
+instance {-# overlapping #-} Show (Tagged '[P Z, Z] Float) where show = perCent
