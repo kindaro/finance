@@ -11,6 +11,7 @@ common commons
     , generic-data
     , tasty, tasty-quickcheck, tasty-hunit
     , tagged
+    , random == 1.2.1
   default-extensions: UnicodeSyntax, BlockArguments, TupleSections, TypeApplications, PartialTypeSignatures, PatternSynonyms
     , LiberalTypeSynonyms, StandaloneDeriving
     , DeriveFunctor, DeriveFoldable, DeriveTraversable
